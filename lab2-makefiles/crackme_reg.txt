@@ -1,0 +1,7 @@
+ARM : dans la comparaison entre MY_HASH et notre hash basé sur le password donné, je change durant l'instruction de comparaison `cmp` la valeur du registre `r2` pour qu'elle soit égale à `r3` (0xdeadbeef).
+
+Ainsi le branchement se fera correctement et la fonction retournera vrai.
+
+On pourrait également modifier le registre r3 afin qu'il corresponde au registre r2. 
+
+Ou encore modifier le registre pc afin de nous rendre à l'endroit qui nous intéresse directement à l'instruction suivante.

@@ -1,0 +1,484 @@
+
+gpio_c.o:     file format elf32-i386
+
+
+Disassembly of section .text.config_register:
+
+00000000 <config_register>:
+/* Ne pas modifier */
+
+int config_register(volatile int gpio_reg) {
+   0:	55                   	push   %ebp
+   1:	89 e5                	mov    %esp,%ebp
+   3:	83 ec 04             	sub    $0x4,%esp
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	c7 45 fc 00 00 00 ff 	movl   $0xff000000,-0x4(%ebp)
+
+        // Set bit 0 to 0
+        gpio_reg &= ~(unsigned int)0x1;
+   d:	8b 45 08             	mov    0x8(%ebp),%eax
+  10:	83 e0 fe             	and    $0xfffffffe,%eax
+  13:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        // Set bits 4,5,6, and 7 to 1
+        gpio_reg |= 0xF << 4;
+  16:	8b 45 08             	mov    0x8(%ebp),%eax
+  19:	0c f0                	or     $0xf0,%al
+  1b:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        // Clear upper byte
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  1e:	8b 45 fc             	mov    -0x4(%ebp),%eax
+  21:	f7 d0                	not    %eax
+  23:	89 c2                	mov    %eax,%edx
+  25:	8b 45 08             	mov    0x8(%ebp),%eax
+  28:	21 d0                	and    %edx,%eax
+  2a:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        // Set upper byte
+        gpio_reg |= (0x66 << 3*8);
+  2d:	8b 45 08             	mov    0x8(%ebp),%eax
+  30:	0d 00 00 00 66       	or     $0x66000000,%eax
+  35:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        // Divide value by 8
+        gpio_reg /= 8;
+  38:	8b 45 08             	mov    0x8(%ebp),%eax
+  3b:	85 c0                	test   %eax,%eax
+  3d:	79 03                	jns    42 <config_register+0x42>
+  3f:	83 c0 07             	add    $0x7,%eax
+  42:	c1 f8 03             	sar    $0x3,%eax
+  45:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        // Composite operation
+        gpio_reg = (gpio_reg | 0xA5) & (0xFFEEDD << 3);
+  48:	8b 45 08             	mov    0x8(%ebp),%eax
+  4b:	25 48 76 ff 07       	and    $0x7ff7648,%eax
+  50:	0c a0                	or     $0xa0,%al
+  52:	89 45 08             	mov    %eax,0x8(%ebp)
+
+        return gpio_reg;
+  55:	8b 45 08             	mov    0x8(%ebp),%eax
+}
+  58:	c9                   	leave  
+  59:	c3                   	ret    
+
+Disassembly of section .debug_frame:
+
+00000000 <.debug_frame>:
+int config_register(volatile int gpio_reg) {
+   0:	10 00                	adc    %al,(%eax)
+   2:	00 00                	add    %al,(%eax)
+   4:	ff                   	(bad)  
+   5:	ff                   	(bad)  
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	ff                   	(bad)  
+   7:	ff 03                	incl   (%ebx)
+   9:	00 01                	add    %al,(%ecx)
+   b:	7c 08                	jl     15 <.debug_frame+0x15>
+        gpio_reg &= ~(unsigned int)0x1;
+   d:	0c 04                	or     $0x4,%al
+   f:	04 88                	add    $0x88,%al
+  11:	01 00                	add    %eax,(%eax)
+  13:	00 28                	add    %ch,(%eax)
+	...
+        gpio_reg |= 0xF << 4;
+  1d:	00 00                	add    %al,(%eax)
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  1f:	00 5a 00             	add    %bl,0x0(%edx)
+  22:	00 00                	add    %al,(%eax)
+  24:	04 01                	add    $0x1,%al
+  26:	00 00                	add    %al,(%eax)
+  28:	00 0e                	add    %cl,(%esi)
+  2a:	08 85 02 04 02 00    	or     %al,0x20402(%ebp)
+        gpio_reg |= (0x66 << 3*8);
+  30:	00 00                	add    %al,(%eax)
+  32:	0d 05 04 56 00       	or     $0x560405,%eax
+  37:	00 00                	add    %al,(%eax)
+        gpio_reg /= 8;
+  39:	c5 0c 04             	lds    (%esp,%eax,1),%ecx
+  3c:	04 00                	add    $0x0,%al
+	...
+
+Disassembly of section .eh_frame:
+
+00000000 <.eh_frame>:
+   0:	10 00                	adc    %al,(%eax)
+   2:	00 00                	add    %al,(%eax)
+   4:	00 00                	add    %al,(%eax)
+   6:	00 00                	add    %al,(%eax)
+   8:	03 00                	add    (%eax),%eax
+   a:	01 7c 08 0c          	add    %edi,0xc(%eax,%ecx,1)
+   e:	04 04                	add    $0x4,%al
+  10:	88 01                	mov    %al,(%ecx)
+  12:	00 00                	add    %al,(%eax)
+  14:	28 00                	sub    %al,(%eax)
+  16:	00 00                	add    %al,(%eax)
+  18:	18 00                	sbb    %al,(%eax)
+  1a:	00 00                	add    %al,(%eax)
+  1c:	00 00                	add    %al,(%eax)
+  1e:	00 00                	add    %al,(%eax)
+  20:	5a                   	pop    %edx
+  21:	00 00                	add    %al,(%eax)
+  23:	00 04 01             	add    %al,(%ecx,%eax,1)
+  26:	00 00                	add    %al,(%eax)
+  28:	00 0e                	add    %cl,(%esi)
+  2a:	08 85 02 04 02 00    	or     %al,0x20402(%ebp)
+  30:	00 00                	add    %al,(%eax)
+  32:	0d 05 04 56 00       	or     $0x560405,%eax
+  37:	00 00                	add    %al,(%eax)
+  39:	c5 0c 04             	lds    (%esp,%eax,1),%ecx
+  3c:	04 00                	add    $0x0,%al
+	...
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+int config_register(volatile int gpio_reg) {
+   0:	70 00                	jo     2 <.debug_info+0x2>
+   2:	00 00                	add    %al,(%eax)
+   4:	04 00                	add    $0x0,%al
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	00 00                	add    %al,(%eax)
+   8:	00 00                	add    %al,(%eax)
+   a:	04 01                	add    $0x1,%al
+   c:	65 00 00             	add    %al,%gs:(%eax)
+        gpio_reg &= ~(unsigned int)0x1;
+   f:	00 0c 1d 00 00 00 36 	add    %cl,0x36000000(,%ebx,1)
+	...
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  22:	00 00                	add    %al,(%eax)
+  24:	00 02                	add    %al,(%edx)
+  26:	26 00 00             	add    %al,%es:(%eax)
+  29:	00 01                	add    %al,(%ecx)
+  2b:	03 5b 00             	add    0x0(%ebx),%ebx
+        gpio_reg |= (0x66 << 3*8);
+  2e:	00 00                	add    %al,(%eax)
+  30:	00 00                	add    %al,(%eax)
+  32:	00 00                	add    %al,(%eax)
+  34:	5a                   	pop    %edx
+  35:	00 00                	add    %al,(%eax)
+  37:	00 01                	add    %al,(%ecx)
+        gpio_reg /= 8;
+  39:	9c                   	pushf  
+  3a:	5b                   	pop    %ebx
+  3b:	00 00                	add    %al,(%eax)
+  3d:	00 03                	add    %al,(%ebx)
+  3f:	5c                   	pop    %esp
+  40:	00 00                	add    %al,(%eax)
+  42:	00 01                	add    %al,(%ecx)
+  44:	03 62 00             	add    0x0(%edx),%esp
+  47:	00 00                	add    %al,(%eax)
+        gpio_reg = (gpio_reg | 0xA5) & (0xFFEEDD << 3);
+  49:	02 91 00 04 00 00    	add    0x400(%ecx),%dl
+  4f:	00 00                	add    %al,(%eax)
+  51:	01 04 6e             	add    %eax,(%esi,%ebp,2)
+  54:	00 00                	add    %al,(%eax)
+        return gpio_reg;
+  56:	00 02                	add    %al,(%edx)
+}
+  58:	91                   	xchg   %eax,%ecx
+  59:	74 00                	je     5b <.debug_info+0x5b>
+  5b:	05 04 05 69 6e       	add    $0x6e690504,%eax
+  60:	74 00                	je     62 <.debug_info+0x62>
+  62:	06                   	push   %es
+  63:	5b                   	pop    %ebx
+  64:	00 00                	add    %al,(%eax)
+  66:	00 07                	add    %al,(%edi)
+  68:	04 07                	add    $0x7,%al
+  6a:	10 00                	adc    %al,(%eax)
+  6c:	00 00                	add    %al,(%eax)
+  6e:	08 67 00             	or     %ah,0x0(%edi)
+  71:	00 00                	add    %al,(%eax)
+	...
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+int config_register(volatile int gpio_reg) {
+   0:	01 11                	add    %edx,(%ecx)
+   2:	01 25 0e 13 0b 03    	add    %esp,0x30b130e
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   8:	0e                   	push   %cs
+   9:	1b 0e                	sbb    (%esi),%ecx
+   b:	55                   	push   %ebp
+   c:	17                   	pop    %ss
+        gpio_reg &= ~(unsigned int)0x1;
+   d:	11 01                	adc    %eax,(%ecx)
+   f:	10 17                	adc    %dl,(%edi)
+  11:	00 00                	add    %al,(%eax)
+  13:	02 2e                	add    (%esi),%ch
+  15:	01 3f                	add    %edi,(%edi)
+        gpio_reg |= 0xF << 4;
+  17:	19 03                	sbb    %eax,(%ebx)
+  19:	0e                   	push   %cs
+  1a:	3a 0b                	cmp    (%ebx),%cl
+  1c:	3b 0b                	cmp    (%ebx),%ecx
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  1e:	27                   	daa    
+  1f:	19 49 13             	sbb    %ecx,0x13(%ecx)
+  22:	11 01                	adc    %eax,(%ecx)
+  24:	12 06                	adc    (%esi),%al
+  26:	40                   	inc    %eax
+  27:	18 97 42 19 01 13    	sbb    %dl,0x13011942(%edi)
+        gpio_reg |= (0x66 << 3*8);
+  2d:	00 00                	add    %al,(%eax)
+  2f:	03 05 00 03 0e 3a    	add    0x3a0e0300,%eax
+  35:	0b 3b                	or     (%ebx),%edi
+  37:	0b 49 13             	or     0x13(%ecx),%ecx
+        gpio_reg /= 8;
+  3a:	02 18                	add    (%eax),%bl
+  3c:	00 00                	add    %al,(%eax)
+  3e:	04 34                	add    $0x34,%al
+  40:	00 03                	add    %al,(%ebx)
+  42:	0e                   	push   %cs
+  43:	3a 0b                	cmp    (%ebx),%cl
+  45:	3b 0b                	cmp    (%ebx),%ecx
+  47:	49                   	dec    %ecx
+        gpio_reg = (gpio_reg | 0xA5) & (0xFFEEDD << 3);
+  48:	13 02                	adc    (%edx),%eax
+  4a:	18 00                	sbb    %al,(%eax)
+  4c:	00 05 24 00 0b 0b    	add    %al,0xb0b0024
+  52:	3e 0b 03             	or     %ds:(%ebx),%eax
+        return gpio_reg;
+  55:	08 00                	or     %al,(%eax)
+  57:	00 06                	add    %al,(%esi)
+}
+  59:	35 00 49 13 00       	xor    $0x134900,%eax
+  5e:	00 07                	add    %al,(%edi)
+  60:	24 00                	and    $0x0,%al
+  62:	0b 0b                	or     (%ebx),%ecx
+  64:	3e 0b 03             	or     %ds:(%ebx),%eax
+  67:	0e                   	push   %cs
+  68:	00 00                	add    %al,(%eax)
+  6a:	08 26                	or     %ah,(%esi)
+  6c:	00 49 13             	add    %cl,0x13(%ecx)
+  6f:	00 00                	add    %al,(%eax)
+	...
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+int config_register(volatile int gpio_reg) {
+   0:	1c 00                	sbb    $0x0,%al
+   2:	00 00                	add    %al,(%eax)
+   4:	02 00                	add    (%eax),%al
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	00 00                	add    %al,(%eax)
+   8:	00 00                	add    %al,(%eax)
+   a:	04 00                	add    $0x0,%al
+	...
+        gpio_reg &= ~(unsigned int)0x1;
+  14:	5a                   	pop    %edx
+	...
+
+Disassembly of section .debug_ranges:
+
+00000000 <.debug_ranges>:
+int config_register(volatile int gpio_reg) {
+   0:	00 00                	add    %al,(%eax)
+   2:	00 00                	add    %al,(%eax)
+   4:	5a                   	pop    %edx
+	...
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+   0:	3b 00                	cmp    (%eax),%eax
+   2:	00 00                	add    %al,(%eax)
+   4:	02 00                	add    (%eax),%al
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	1f                   	pop    %ds
+   7:	00 00                	add    %al,(%eax)
+   9:	00 01                	add    %al,(%ecx)
+   b:	01 fb                	add    %edi,%ebx
+        gpio_reg &= ~(unsigned int)0x1;
+   d:	0e                   	push   %cs
+   e:	0d 00 01 01 01       	or     $0x1010100,%eax
+  13:	01 00                	add    %eax,(%eax)
+  15:	00 00                	add    %al,(%eax)
+        gpio_reg |= 0xF << 4;
+  17:	01 00                	add    %eax,(%eax)
+  19:	00 01                	add    %al,(%ecx)
+  1b:	00 67 70             	add    %ah,0x70(%edi)
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  1e:	69 6f 5f 63 2e 63 00 	imul   $0x632e63,0x5f(%edi),%ebp
+  25:	00 00                	add    %al,(%eax)
+  27:	00 00                	add    %al,(%eax)
+  29:	00 05 02 00 00 00    	add    %al,0x2
+        gpio_reg |= (0x66 << 3*8);
+  2f:	00 14 67             	add    %dl,(%edi,%eiz,2)
+  32:	77 93                	ja     ffffffc7 <config_register+0xffffffc7>
+  34:	85 e7                	test   %esp,%edi
+  36:	af                   	scas   %es:(%edi),%eax
+  37:	f5                   	cmc    
+        gpio_reg /= 8;
+  38:	ca 3d 02             	lret   $0x23d
+  3b:	02 00                	add    (%eax),%al
+  3d:	01 01                	add    %eax,(%ecx)
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+int config_register(volatile int gpio_reg) {
+   0:	55                   	push   %ebp
+   1:	50                   	push   %eax
+   2:	50                   	push   %eax
+   3:	45                   	inc    %ebp
+   4:	52                   	push   %edx
+   5:	5f                   	pop    %edi
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	42                   	inc    %edx
+   7:	59                   	pop    %ecx
+   8:	54                   	push   %esp
+   9:	45                   	inc    %ebp
+   a:	5f                   	pop    %edi
+   b:	4d                   	dec    %ebp
+   c:	41                   	inc    %ecx
+        gpio_reg &= ~(unsigned int)0x1;
+   d:	53                   	push   %ebx
+   e:	4b                   	dec    %ebx
+   f:	00 75 6e             	add    %dh,0x6e(%ebp)
+  12:	73 69                	jae    7d <.debug_str+0x7d>
+  14:	67 6e                	outsb  %ds:(%si),(%dx)
+        gpio_reg |= 0xF << 4;
+  16:	65 64 20 69 6e       	gs and %ch,%fs:0x6e(%ecx)
+  1b:	74 00                	je     1d <.debug_str+0x1d>
+  1d:	67 70 69             	addr16 jo 89 <.debug_str+0x89>
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  20:	6f                   	outsl  %ds:(%esi),(%dx)
+  21:	5f                   	pop    %edi
+  22:	63 2e                	arpl   %bp,(%esi)
+  24:	63 00                	arpl   %ax,(%eax)
+  26:	63 6f 6e             	arpl   %bp,0x6e(%edi)
+  29:	66 69 67 5f 72 65    	imul   $0x6572,0x5f(%edi),%sp
+        gpio_reg |= (0x66 << 3*8);
+  2f:	67 69 73 74 65 72 00 	imul   $0x2f007265,0x74(%bp,%di),%esi
+  36:	2f 
+  37:	68 6f 6d 65 2f       	push   $0x2f656d6f
+        gpio_reg /= 8;
+  3c:	72 65                	jb     a3 <.debug_str+0xa3>
+  3e:	64 73 2f             	fs jae 70 <.debug_str+0x70>
+  41:	44                   	inc    %esp
+  42:	65 73 6b             	gs jae b0 <.debug_str+0xb0>
+  45:	74 6f                	je     b6 <.debug_str+0xb6>
+  47:	70 2f                	jo     78 <.debug_str+0x78>
+        gpio_reg = (gpio_reg | 0xA5) & (0xFFEEDD << 3);
+  49:	61                   	popa   
+  4a:	73 6d                	jae    b9 <.debug_str+0xb9>
+  4c:	5f                   	pop    %edi
+  4d:	6c                   	insb   (%dx),%es:(%edi)
+  4e:	61                   	popa   
+  4f:	62 30                	bound  %esi,(%eax)
+  51:	33 2f                	xor    (%edi),%ebp
+  53:	78 38                	js     8d <.debug_str+0x8d>
+        return gpio_reg;
+  55:	36 2f                	ss das 
+  57:	67 70 69             	addr16 jo c3 <.debug_str+0xc3>
+  5a:	6f                   	outsl  %ds:(%esi),(%dx)
+  5b:	00 67 70             	add    %ah,0x70(%edi)
+  5e:	69 6f 5f 72 65 67 00 	imul   $0x676572,0x5f(%edi),%ebp
+  65:	47                   	inc    %edi
+  66:	4e                   	dec    %esi
+  67:	55                   	push   %ebp
+  68:	20 43 31             	and    %al,0x31(%ebx)
+  6b:	31 20                	xor    %esp,(%eax)
+  6d:	36 2e 34 2e          	ss cs xor $0x2e,%al
+  71:	30 20                	xor    %ah,(%eax)
+  73:	2d 6d 70 72 65       	sub    $0x6572706d,%eax
+  78:	66 65 72 72          	data16 gs jb ee <.debug_str+0xee>
+  7c:	65 64 2d 73 74 61 63 	gs fs sub $0x63617473,%eax
+  83:	6b 2d 62 6f 75 6e 64 	imul   $0x64,0x6e756f62,%ebp
+  8a:	61                   	popa   
+  8b:	72 79                	jb     106 <.debug_str+0x106>
+  8d:	3d 32 20 2d 6d       	cmp    $0x6d2d2032,%eax
+  92:	61                   	popa   
+  93:	72 63                	jb     f8 <.debug_str+0xf8>
+  95:	68 3d 69 33 38       	push   $0x3833693d
+  9a:	36 20 2d 67 20 2d 4f 	and    %ch,%ss:0x4f2d2067
+  a1:	30 20                	xor    %ah,(%eax)
+  a3:	2d 66 66 75 6e       	sub    $0x6e756666,%eax
+  a8:	63 74 69 6f          	arpl   %si,0x6f(%ecx,%ebp,2)
+  ac:	6e                   	outsb  %ds:(%esi),(%dx)
+  ad:	2d 73 65 63 74       	sub    $0x74636573,%eax
+  b2:	69 6f 6e 73 20 2d 66 	imul   $0x662d2073,0x6e(%edi),%ebp
+  b9:	76 69                	jbe    124 <.debug_str+0x124>
+  bb:	73 69                	jae    126 <.debug_str+0x126>
+  bd:	62 69 6c             	bound  %ebp,0x6c(%ecx)
+  c0:	69 74 79 3d 68 69 64 	imul   $0x64646968,0x3d(%ecx,%edi,2),%esi
+  c7:	64 
+  c8:	65 6e                	outsb  %gs:(%esi),(%dx)
+  ca:	20 2d 66 6e 6f 2d    	and    %ch,0x2d6f6e66
+  d0:	73 74                	jae    146 <.debug_str+0x146>
+  d2:	72 69                	jb     13d <.debug_str+0x13d>
+  d4:	63 74 2d 61          	arpl   %si,0x61(%ebp,%ebp,1)
+  d8:	6c                   	insb   (%dx),%es:(%edi)
+  d9:	69 61 73 69 6e 67 20 	imul   $0x20676e69,0x73(%ecx),%esp
+  e0:	2d 66 6e 6f 2d       	sub    $0x2d6f6e66,%eax
+  e5:	64 77 61             	fs ja  149 <config_register+0x149>
+  e8:	72 66                	jb     150 <config_register+0x150>
+  ea:	32 2d 63 66 69 2d    	xor    0x2d696663,%ch
+  f0:	61                   	popa   
+  f1:	73 6d                	jae    160 <config_register+0x160>
+  f3:	20 2d 66 6e 6f 2d    	and    %ch,0x2d6f6e66
+  f9:	73 74                	jae    16f <config_register+0x16f>
+  fb:	61                   	popa   
+  fc:	63 6b 2d             	arpl   %bp,0x2d(%ebx)
+  ff:	70 72                	jo     173 <config_register+0x173>
+ 101:	6f                   	outsl  %ds:(%esi),(%dx)
+ 102:	74 65                	je     169 <config_register+0x169>
+ 104:	63 74 6f 72          	arpl   %si,0x72(%edi,%ebp,2)
+ 108:	20 2d 66 73 74 61    	and    %ch,0x61747366
+ 10e:	63 6b 2d             	arpl   %bp,0x2d(%ebx)
+ 111:	75 73                	jne    186 <config_register+0x186>
+ 113:	61                   	popa   
+ 114:	67 65 20 2d          	and    %ch,%gs:(%di)
+ 118:	66 6e                	data16 outsb %ds:(%esi),(%dx)
+ 11a:	6f                   	outsl  %ds:(%esi),(%dx)
+ 11b:	2d 74 6f 70 6c       	sub    $0x6c706f74,%eax
+ 120:	65 76 65             	gs jbe 188 <config_register+0x188>
+ 123:	6c                   	insb   (%dx),%es:(%edi)
+ 124:	2d 72 65 6f 72       	sub    $0x726f6572,%eax
+ 129:	64 65 72 20          	fs gs jb 14d <config_register+0x14d>
+ 12d:	2d 66 6e 6f 2d       	sub    $0x2d6f6e66,%eax
+ 132:	62 75 69             	bound  %esi,0x69(%ebp)
+ 135:	6c                   	insb   (%dx),%es:(%edi)
+ 136:	74 69                	je     1a1 <config_register+0x1a1>
+ 138:	6e                   	outsb  %ds:(%esi),(%dx)
+ 139:	20 2d 66 66 72 65    	and    %ch,0x65726666
+ 13f:	65 73 74             	gs jae 1b6 <config_register+0x1b6>
+ 142:	61                   	popa   
+ 143:	6e                   	outsb  %ds:(%esi),(%dx)
+ 144:	64                   	fs
+ 145:	69                   	.byte 0x69
+ 146:	6e                   	outsb  %ds:(%esi),(%dx)
+ 147:	67                   	addr16
+	...
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+int config_register(volatile int gpio_reg) {
+   0:	00 47 43             	add    %al,0x43(%edi)
+   3:	43                   	inc    %ebx
+   4:	3a 20                	cmp    (%eax),%ah
+        const unsigned int UPPER_BYTE_MASK = 0xFF000000;
+   6:	28 42 75             	sub    %al,0x75(%edx)
+   9:	69 6c 64 72 6f 6f 74 	imul   $0x20746f6f,0x72(%esp,%eiz,2),%ebp
+  10:	20 
+        gpio_reg &= ~(unsigned int)0x1;
+  11:	32 30                	xor    (%eax),%dh
+  13:	31 38                	xor    %edi,(%eax)
+  15:	2e 30 32             	xor    %dh,%cs:(%edx)
+        gpio_reg |= 0xF << 4;
+  18:	2d 72 63 32 2d       	sub    $0x2d326372,%eax
+  1d:	30 30                	xor    %dh,(%eax)
+        gpio_reg &= ~UPPER_BYTE_MASK;
+  1f:	30 30                	xor    %dh,(%eax)
+  21:	36 2d 67 33 39 31    	ss sub $0x31393367,%eax
+  27:	30 31                	xor    %dh,(%ecx)
+  29:	62 37                	bound  %esi,(%edi)
+  2b:	29 20                	sub    %esp,(%eax)
+        gpio_reg |= (0x66 << 3*8);
+  2d:	36 2e 34 2e          	ss cs xor $0x2e,%al
+  31:	30 00                	xor    %al,(%eax)

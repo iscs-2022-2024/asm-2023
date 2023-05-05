@@ -1,0 +1,157 @@
+
+gpio_asm.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <asm_config_register>:
+   0:	55                   	push   %ebp
+   1:	89 e5                	mov    %esp,%ebp
+   3:	8b 45 08             	mov    0x8(%ebp),%eax
+   6:	53                   	push   %ebx
+   7:	b9 01 00 00 00       	mov    $0x1,%ecx
+   c:	f7 d1                	not    %ecx
+   e:	21 c8                	and    %ecx,%eax
+  10:	31 c9                	xor    %ecx,%ecx
+  12:	b9 0f 00 00 00       	mov    $0xf,%ecx
+  17:	c1 e1 04             	shl    $0x4,%ecx
+  1a:	09 c8                	or     %ecx,%eax
+  1c:	31 c9                	xor    %ecx,%ecx
+  1e:	b9 00 00 00 ff       	mov    $0xff000000,%ecx
+  23:	f7 d1                	not    %ecx
+  25:	21 c8                	and    %ecx,%eax
+  27:	31 c9                	xor    %ecx,%ecx
+  29:	b9 66 00 00 00       	mov    $0x66,%ecx
+  2e:	c1 e1 18             	shl    $0x18,%ecx
+  31:	09 c8                	or     %ecx,%eax
+  33:	c1 e0 04             	shl    $0x4,%eax
+  36:	31 c9                	xor    %ecx,%ecx
+  38:	0d a5 00 00 00       	or     $0xa5,%eax
+  3d:	b9 dd ee ff 00       	mov    $0xffeedd,%ecx
+  42:	c1 e1 03             	shl    $0x3,%ecx
+  45:	21 c8                	and    %ecx,%eax
+
+00000047 <exit>:
+  47:	5b                   	pop    %ebx
+  48:	c9                   	leave  
+  49:	c3                   	ret    
+
+Disassembly of section .debug_line:
+
+00000000 <.debug_line>:
+   0:	4f                   	dec    %edi
+   1:	00 00                	add    %al,(%eax)
+   3:	00 02                	add    %al,(%edx)
+   5:	00 21                	add    %ah,(%ecx)
+   7:	00 00                	add    %al,(%eax)
+   9:	00 01                	add    %al,(%ecx)
+   b:	01 fb                	add    %edi,%ebx
+   d:	0e                   	push   %cs
+   e:	0d 00 01 01 01       	or     $0x1010100,%eax
+  13:	01 00                	add    %eax,(%eax)
+  15:	00 00                	add    %al,(%eax)
+  17:	01 00                	add    %eax,(%eax)
+  19:	00 01                	add    %al,(%ecx)
+  1b:	00 67 70             	add    %ah,0x70(%edi)
+  1e:	69 6f 5f 61 73 6d 2e 	imul   $0x2e6d7361,0x5f(%edi),%ebp
+  25:	53                   	push   %ebx
+  26:	00 00                	add    %al,(%eax)
+  28:	00 00                	add    %al,(%eax)
+  2a:	00 00                	add    %al,(%eax)
+  2c:	05 02 00 00 00       	add    $0x2,%eax
+  31:	00 1a                	add    %bl,(%edx)
+  33:	21 2f                	and    %ebp,(%edi)
+  35:	3d 23 59 2f 30       	cmp    $0x302f5923,%eax
+  3a:	30 59 3d             	xor    %bl,0x3d(%ecx)
+  3d:	30 31                	xor    %dh,(%ecx)
+  3f:	59                   	pop    %ecx
+  40:	2f                   	das    
+  41:	30 31                	xor    %dh,(%ecx)
+  43:	59                   	pop    %ecx
+  44:	3d 30 3e 30 59       	cmp    $0x59303e30,%eax
+  49:	59                   	pop    %ecx
+  4a:	3d 31 21 21 02       	cmp    $0x2212131,%eax
+  4f:	01 00                	add    %eax,(%eax)
+  51:	01 01                	add    %eax,(%ecx)
+
+Disassembly of section .debug_info:
+
+00000000 <.debug_info>:
+   0:	22 00                	and    (%eax),%al
+   2:	00 00                	add    %al,(%eax)
+   4:	02 00                	add    (%eax),%al
+   6:	00 00                	add    %al,(%eax)
+   8:	00 00                	add    %al,(%eax)
+   a:	04 01                	add    $0x1,%al
+	...
+  14:	4a                   	dec    %edx
+  15:	00 00                	add    %al,(%eax)
+  17:	00 00                	add    %al,(%eax)
+  19:	00 00                	add    %al,(%eax)
+  1b:	00 0b                	add    %cl,(%ebx)
+  1d:	00 00                	add    %al,(%eax)
+  1f:	00 31                	add    %dh,(%ecx)
+  21:	00 00                	add    %al,(%eax)
+  23:	00 01                	add    %al,(%ecx)
+  25:	80                   	.byte 0x80
+
+Disassembly of section .debug_abbrev:
+
+00000000 <.debug_abbrev>:
+   0:	01 11                	add    %edx,(%ecx)
+   2:	00 10                	add    %dl,(%eax)
+   4:	06                   	push   %es
+   5:	11 01                	adc    %eax,(%ecx)
+   7:	12 01                	adc    (%ecx),%al
+   9:	03 0e                	add    (%esi),%ecx
+   b:	1b 0e                	sbb    (%esi),%ecx
+   d:	25 0e 13 05 00       	and    $0x5130e,%eax
+	...
+
+Disassembly of section .debug_aranges:
+
+00000000 <.debug_aranges>:
+   0:	1c 00                	sbb    $0x0,%al
+   2:	00 00                	add    %al,(%eax)
+   4:	02 00                	add    (%eax),%al
+   6:	00 00                	add    %al,(%eax)
+   8:	00 00                	add    %al,(%eax)
+   a:	04 00                	add    $0x0,%al
+	...
+  14:	4a                   	dec    %edx
+	...
+
+Disassembly of section .debug_str:
+
+00000000 <.debug_str>:
+   0:	67 70 69             	addr16 jo 6c <exit+0x25>
+   3:	6f                   	outsl  %ds:(%esi),(%dx)
+   4:	5f                   	pop    %edi
+   5:	61                   	popa   
+   6:	73 6d                	jae    75 <exit+0x2e>
+   8:	2e 53                	cs push %ebx
+   a:	00 2f                	add    %ch,(%edi)
+   c:	68 6f 6d 65 2f       	push   $0x2f656d6f
+  11:	72 65                	jb     78 <exit+0x31>
+  13:	64 73 2f             	fs jae 45 <asm_config_register+0x45>
+  16:	44                   	inc    %esp
+  17:	65 73 6b             	gs jae 85 <exit+0x3e>
+  1a:	74 6f                	je     8b <exit+0x44>
+  1c:	70 2f                	jo     4d <exit+0x6>
+  1e:	61                   	popa   
+  1f:	73 6d                	jae    8e <exit+0x47>
+  21:	5f                   	pop    %edi
+  22:	6c                   	insb   (%dx),%es:(%edi)
+  23:	61                   	popa   
+  24:	62 30                	bound  %esi,(%eax)
+  26:	33 2f                	xor    (%edi),%ebp
+  28:	78 38                	js     62 <exit+0x1b>
+  2a:	36 2f                	ss das 
+  2c:	67 70 69             	addr16 jo 98 <exit+0x51>
+  2f:	6f                   	outsl  %ds:(%esi),(%dx)
+  30:	00 47 4e             	add    %al,0x4e(%edi)
+  33:	55                   	push   %ebp
+  34:	20 41 53             	and    %al,0x53(%ecx)
+  37:	20 32                	and    %dh,(%edx)
+  39:	2e 32 39             	xor    %cs:(%ecx),%bh
+  3c:	2e 31 00             	xor    %eax,%cs:(%eax)
